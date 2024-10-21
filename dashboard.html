@@ -482,126 +482,141 @@
             </div>
 
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const isRegistered = localStorage.getItem('isRegistered'); // Check if the user has paid the registration fee
-                    const sidebarItems = document.querySelectorAll('.registration-locked .nav-item > .nav-link'); // Target sidebar items
-            
-                    sidebarItems.forEach(item => {
-                        item.addEventListener('click', function(e) {
-                            e.preventDefault(); // Prevent default action of the link
-            
-                            if (!isRegistered) {
-                                // Show SweetAlert if the user hasn't paid the registration fee
-                                Swal.fire({
-                                    title: 'ONETIME PAYMENT',
-                                    text: 'You need to pay the registration fee before you can access this feature or invite 30 people to get access.',
-                                    icon: 'warning',
-                                    showCancelButton: true,
-                                    confirmButtonText: 'Register',
-                                    cancelButtonText: 'Invite',
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        // Show registration payment confirmation with email input
-                                        Swal.fire({
-                                            title: 'Registration Fee',
-                                            text: 'You are about to pay 10,000 Naira for registration where you get 20,000 as registration bonus.',
-                                            icon: 'info',
-                                            input: 'text',
-                                            inputLabel: 'Enter your email',
-                                            inputPlaceholder: 'example@gmail.com',
-                                            showCancelButton: true,
-                                            confirmButtonText: 'Pay',
-                                            cancelButtonText: 'Decline',
-                                            preConfirm: (email) => {
-                                                // Validate email must end with @gmail.com
-                                                const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-                                                if (!emailPattern.test(email)) {
-                                                    Swal.showValidationMessage('Please enter a valid Gmail address');
-                                                }
-                                                return email;
-                                            }
-                                        }).then((paymentResult) => {
-                                            const email = paymentResult.value; // Get the user's email from the input
-                                            if (paymentResult.isConfirmed && email) {
-                                                const registrationFee = 10000; // Set registration fee amount
-                                                PayWithPaystack(registrationFee, email); // Call the PayWithPaystack function
-                                            }
-                                        });
-                                    } else if (result.dismiss === Swal.DismissReason.cancel) {
-                                        // If the user clicks 'Invite', show the invite code from localStorage
-                                        const inviteCode = localStorage.getItem('inviteCode') || 'No invite code found'; // Fetch from localStorage
-                                        const inviteUrl = 'https://assetventure.github.io/assetventure/signup.html?invite=' + inviteCode; // Updated invite URL
-                                        
-                                        Swal.fire({
-                                            title: 'Invite Code',
-                                            text: `Your invite code is: ${inviteUrl}`, // Show full invite URL
-                                            icon: 'info',
-                                            showCancelButton: true,
-                                            confirmButtonText: 'Copy Code',
-                                            cancelButtonText: 'Close',
-                                        }).then((copyResult) => {
-                                            if (copyResult.isConfirmed) {
-                                                navigator.clipboard.writeText(inviteUrl).then(() => {
-                                                    Swal.fire({
-                                                        title: 'Copied!',
-                                                        text: 'Invite code has been copied to clipboard.',
-                                                        icon: 'success',
-                                                    });
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                            } else {
-                                // Allow access if the user is registered
-                                window.location.href = this.getAttribute('href'); // Redirect to the corresponding page
+               document.addEventListener('DOMContentLoaded', function() {
+    const isRegistered = localStorage.getItem('isRegistered'); // Check if the user has paid the registration fee
+    const sidebarItems = document.querySelectorAll('.registration-locked .nav-item > .nav-link'); // Sidebar items
+
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default action
+
+            if (!isRegistered) {
+                Swal.fire({
+                    title: 'ONETIME PAYMENT',
+                    text: 'You need to pay the registration fee before you can access this feature or invite 30 people to get access.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Register',
+                    cancelButtonText: 'Invite',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Registration Fee',
+                            text: 'You are about to pay 10,000 Naira for registration where you get 20,000 as a registration bonus.',
+                            icon: 'info',
+                            input: 'text',
+                            inputLabel: 'Enter your email',
+                            inputPlaceholder: 'example@gmail.com',
+                            showCancelButton: true,
+                            confirmButtonText: 'Pay',
+                            cancelButtonText: 'Decline',
+                            preConfirm: (email) => {
+                                const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+                                if (!emailPattern.test(email)) {
+                                    Swal.showValidationMessage('Please enter a valid Gmail address');
+                                }
+                                return email;
+                            }
+                        }).then((paymentResult) => {
+                            const email = paymentResult.value;
+                            if (paymentResult.isConfirmed && email) {
+                                const registrationFee = 10000;
+                                PayWithPaystack(registrationFee, email);
                             }
                         });
-                    });
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        const inviteCode = localStorage.getItem('inviteCode') || 'No invite code found';
+                        const inviteUrl = `https://assetventure.github.io/assetventure/signup.html?invite=${inviteCode}`;
+
+                        Swal.fire({
+                            title: 'Invite Code',
+                            text: `Your invite URL is: ${inviteUrl}`,
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Copy Code',
+                            cancelButtonText: 'Close',
+                        }).then((copyResult) => {
+                            if (copyResult.isConfirmed) {
+                                navigator.clipboard.writeText(inviteUrl).then(() => {
+                                    Swal.fire({
+                                        title: 'Copied!',
+                                        text: 'Invite code has been copied to clipboard.',
+                                        icon: 'success',
+                                    });
+                                });
+                            }
+                        });
+                    }
                 });
-            
-                // Paystack Payment Function
-                function PayWithPaystack(amount, email) {
-                    let handler = PaystackPop.setup({
-                        key: 'pk_test_ca55286f96b59b5be125bdc74ea16d5ec50489f7', // Replace with your Paystack public key
-                        email: email,
-                        amount: amount * 100, // Convert to kobo
-                        currency: 'NGN',
-                        metadata: {
-                            transaction_type: 'registration' // Specify the type of transaction as 'registration'
-                        },
-                        ref: '' + Math.floor((Math.random() * 1000000000) + 1), // Reference for this transaction
-            
-                        onClose: function() {
-                            Swal.fire({
-                                title: 'Transaction not completed',
-                                text: 'It seems the transaction was not completed.',
-                                icon: 'warning',
-                                confirmButtonText: 'Okay',
-                                background: '#2d2d2d', // Black background
-                                color: '#ffffff' // White text color
-                            });
-                        },
-            
-                        callback: function(response) {
-                            Swal.fire({
-                                title: 'Payment Successful!',
-                                text: 'Reference: ' + response.reference + '. Your payment is successful, you can now access all features!',
-                                icon: 'success',
-                                confirmButtonText: 'Okay',
-                                background: '#2d2d2d', // Black background
-                                color: '#ffffff' // White text color
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Send the reference and metadata to your server for verification and balance update
-                                    window.location.href = "/payment/verify/" + response.reference + "?transaction_type=registration";
-                                }
-                            });
-                        }
+            } else {
+                window.location.href = this.getAttribute('href'); // Redirect if already registered
+            }
+        });
+    });
+});
+
+// Paystack payment function
+function PayWithPaystack(amount, email) {
+    let handler = PaystackPop.setup({
+        key: 'pk_test_ca55286f96b59b5be125bdc74ea16d5ec50489f7', // Paystack public key
+        email: email,
+        amount: amount * 100, // Amount in kobo
+        currency: 'NGN',
+        metadata: {
+            transaction_type: 'registration'
+        },
+        ref: '' + Math.floor((Math.random() * 1000000000) + 1), // Generate a unique reference number
+
+        onClose: function() {
+            Swal.fire({
+                title: 'Transaction not completed',
+                text: 'It seems the transaction was not completed.',
+                icon: 'warning',
+                confirmButtonText: 'Okay'
+            });
+        },
+
+        callback: function(response) {
+            // Call Paystack's verify endpoint on the user side
+            verifyPayment(response.reference).then(isVerified => {
+                if (isVerified) {
+                    Swal.fire({
+                        title: 'Payment Successful!',
+                        text: `Reference: ${response.reference}. Your payment is successful, you can now access all features!`,
+                        icon: 'success',
+                        confirmButtonText: 'Okay'
+                    }).then(() => {
+                        localStorage.setItem('isRegistered', 'true'); // Mark user as registered
+                        window.location.href = 'dashboard.html'; // Redirect to dashboard
                     });
-            
-                    handler.openIframe(); // Open the Paystack payment window
+                } else {
+                    Swal.fire({
+                        title: 'Payment Verification Failed',
+                        text: 'We could not verify your payment. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'Okay'
+                    });
                 }
+            });
+        }
+    });
+
+    handler.openIframe();
+}
+
+// Client-side payment verification (mocked without backend)
+function verifyPayment(reference) {
+    // You would normally send a request to your server to verify the transaction
+    // Mocking a secure check on the client side for demonstration
+    return new Promise((resolve) => {
+        // Simulating a successful payment verification after 2 seconds
+        setTimeout(() => {
+            resolve(true); // Assume verification is successful
+        }, 2000);
+    });
+}
+
+
             </script>
             
             
