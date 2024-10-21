@@ -134,8 +134,7 @@
 	<!-- signup.html -->
 	 
 	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-    // Initialize IndexedDB
+	document.addEventListener('DOMContentLoaded', () => {
     let db;
     const request = indexedDB.open('UserDatabase', 1);
 
@@ -143,24 +142,18 @@
         db = event.target.result;
         let objectStore = db.createObjectStore('users', { keyPath: 'email' });
         objectStore.createIndex('inviteCode', 'inviteCode', { unique: true });
-        objectStore.createIndex('inviteCount', 'inviteCount', { unique: false }); // Add inviteCount index
+        objectStore.createIndex('inviteCount', 'inviteCount', { unique: false });
     };
 
     request.onsuccess = function(event) {
         db = event.target.result;
 
-        // Check if there's an invite code in the URL
+        // Check for invite code in the URL and store it
         const urlParams = new URLSearchParams(window.location.search);
         const referrerInviteCode = urlParams.get('invite');
-
         if (referrerInviteCode) {
-            // Store the invite code in localStorage
             localStorage.setItem('referrerInviteCode', referrerInviteCode);
         }
-    };
-
-    request.onerror = function(event) {
-        console.error("Error opening database: ", event.target.errorCode);
     };
 
     document.querySelector('form').addEventListener('submit', function(e) {
@@ -181,12 +174,10 @@
             return;
         }
 
-        // Generate a unique invite code with site URL
-        let baseUrl = 'https://assetventure.github.io/assetventure/';
-        let inviteCode = baseUrl + 'INV-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        // Generate a unique invite code without the URL
+        let inviteCode = 'INV-' + Math.random().toString(36).substr(2, 9).toUpperCase();
         console.log("Generated Invite Code:", inviteCode);
 
-        // Get the referrer invite code from localStorage, if available
         const referrerCode = localStorage.getItem('referrerInviteCode') || null;
 
         // Check if email exists before adding
@@ -202,11 +193,9 @@
                     text: 'Error: User with this email already exists.',
                 });
             } else {
-                // Add user with an initial balance of 200,000, invite code, and referrer code
                 const request = objectStore.add({ username, email, password, balance: 200000, inviteCode, inviteCount: 0, referrerCode });
 
                 request.onsuccess = function() {
-                    // Increment invite count for the referrer
                     if (referrerCode) {
                         const referrerTransaction = db.transaction(['users'], 'readwrite');
                         const referrerStore = referrerTransaction.objectStore('users');
@@ -215,8 +204,8 @@
                         referrerRequest.onsuccess = function(event) {
                             const referrerUser = event.target.result;
                             if (referrerUser) {
-                                referrerUser.inviteCount = (referrerUser.inviteCount || 0) + 1; // Increment invite count
-                                referrerStore.put(referrerUser); // Update the referrer user
+                                referrerUser.inviteCount = (referrerUser.inviteCount || 0) + 1;
+                                referrerStore.put(referrerUser);
                             }
                         };
                     }
@@ -224,14 +213,14 @@
                     Swal.fire({
                         icon: 'success',
                         title: 'Success!',
-                        text: 'User registered successfully.',
+                         text: `User registered successfully. //Your invite code is: ${inviteCode}`,
                         timer: 2000,
                         showConfirmButton: false
                     }).then(() => {
-                        localStorage.setItem('loggedInUser', email); // Save email in localStorage
-                        localStorage.setItem('showBonusAlert', 'true'); // Set bonus alert flag
-                        localStorage.removeItem('referrerInviteCode'); // Clear the referrer code after use
-                        window.location.href = 'dashboard.html'; // Redirect to dashboard
+                        localStorage.setItem('loggedInUser', email);
+                        localStorage.setItem('inviteCode', inviteCode); // Store the invite code separately
+                        localStorage.removeItem('referrerInviteCode');
+                        window.location.href = 'dashboard.html';
                     });
                 };
 
@@ -246,6 +235,8 @@
         };
     });
 });
+
+
 
 	</script>
 	
