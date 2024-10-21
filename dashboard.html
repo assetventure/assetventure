@@ -662,55 +662,110 @@ function verifyPayment(reference) {
 
 
 
-<div class="small-box text-bg-primary" id="inviteCountBox">
-    <div class="inner">
-        <h3 id="inviteCount">0</h3>
-        <p>Invite count</p>
-    </div>
-    <svg class="small-box-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-    </svg>
-    <a href="#" class="small-box-footer">
-        More info <i class="fa-solid fa-arrow-circle-right"></i>
-    </a>
-</div>
+                            <div class="small-box text-bg-primary" id="inviteCountBox">
+                                <div class="inner">
+                                    <h3 id="inviteCount">0</h3>
+                                    <p>Invite count</p>
+                                </div>
+                                <svg class="small-box-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                                </svg>
+                                <a href="#" id="inviteButton" class="small-box-footer">
+                                    Share invite code <i class="fa-solid fa-arrow-circle-right"></i>
+                                </a>
+                            </div>
+                            
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-	    let db;
-	    const request = indexedDB.open('UserDatabase', 1);
+document.addEventListener('DOMContentLoaded', () => {
+    let db;
+    const request = indexedDB.open('UserDatabase', 1);
 
-	    request.onsuccess = function(event) {
-	        db = event.target.result;
-	        displayInviteCount();
-	    };
+    request.onsuccess = function(event) {
+        db = event.target.result;
+        displayInviteCount();
+    };
 
-	    request.onerror = function(event) {
-	        console.error("Error opening database: ", event.target.errorCode);
-	    };
+    request.onerror = function(event) {
+        console.error("Error opening database: ", event.target.errorCode);
+    };
 
-	    function displayInviteCount() {
-	        const email = localStorage.getItem('loggedInUser');
-	        if (!email) {
-	            document.getElementById('inviteCount').textContent = "0"; // Set default invite count
-	            return; // Exit if no user is logged in
-	        }
+    function displayInviteCount() {
+        const email = localStorage.getItem('loggedInUser');
+        if (!email) {
+            document.getElementById('inviteCount').textContent = "0"; // Set default invite count
+            return; // Exit if no user is logged in
+        }
 
-	        const transaction = db.transaction(['users'], 'readonly');
-	        const objectStore = transaction.objectStore('users');
-	        const request = objectStore.get(email);
+        const transaction = db.transaction(['users'], 'readonly');
+        const objectStore = transaction.objectStore('users');
+        const request = objectStore.get(email);
 
-	        request.onsuccess = function(event) {
-	            const user = event.target.result;
-	            if (user) {
-	                const inviteCount = user.inviteCount || 0;
-	                document.getElementById('inviteCount').textContent = inviteCount;
-	            } else {
-	                document.getElementById('inviteCount').textContent = "0"; // Handle case where user is not found
-	            }
-	        };
-	    }
-	});
+        request.onsuccess = function(event) {
+            const user = event.target.result;
+            if (user) {
+                const inviteCount = user.inviteCount || 0;
+                document.getElementById('inviteCount').textContent = inviteCount;
+            } else {
+                document.getElementById('inviteCount').textContent = "0"; // Handle case where user is not found
+            }
+        };
+    }
+
+    // Invite button click event
+    document.getElementById('inviteButton').addEventListener('click', function() {
+        const inviteCode = localStorage.getItem('inviteCode') || 'No invite code found';
+        const inviteUrl = `https://assetventure.github.io/assetventure/signup.html?invite=${inviteCode}`;
+
+        // Display invite sharing modal
+        Swal.fire({
+            title: 'Invite Code',
+            text: `Your invite URL is: ${inviteUrl}`,
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonText: 'Copy Code',
+            cancelButtonText: 'Close',
+        }).then((copyResult) => {
+            if (copyResult.isConfirmed) {
+                navigator.clipboard.writeText(inviteUrl).then(() => {
+                    Swal.fire({
+                        title: 'Copied!',
+                        text: 'Invite code has been copied to clipboard.',
+                        icon: 'success',
+                    });
+                    incrementInviteCount(); // Increment the invite count
+                });
+            }
+        });
+    });
+
+    // Function to increment the invite count in the database
+    function incrementInviteCount() {
+        const email = localStorage.getItem('loggedInUser');
+        if (!email) return;
+
+        const transaction = db.transaction(['users'], 'readwrite');
+        const objectStore = transaction.objectStore('users');
+        const request = objectStore.get(email);
+
+        request.onsuccess = function(event) {
+            const user = event.target.result;
+            if (user) {
+                user.inviteCount = (user.inviteCount || 0) + 1; // Increment the count
+                const updateRequest = objectStore.put(user);
+                
+                updateRequest.onsuccess = function() {
+                    displayInviteCount(); // Update displayed count
+                };
+
+                updateRequest.onerror = function(event) {
+                    console.error('Error updating invite count:', event.target.errorCode);
+                };
+            }
+        };
+    }
+});
+
 </script>
 
 
