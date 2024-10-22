@@ -558,7 +558,7 @@
 // Paystack payment function
 function PayWithPaystack(amount, email) {
     let handler = PaystackPop.setup({
-        key: 'pk_test_ca55286f96b59b5be125bdc74ea16d5ec50489f7', // Paystack public key
+        key: 'pk_test_88d49b9eac13d6a6931673e62342b85daeb39601', // Paystack public key
         email: email,
         amount: amount * 100, // Amount in kobo
         currency: 'NGN',
@@ -788,7 +788,7 @@ function verifyPayment(reference) {
                             <!--begin::Small Box Widget 2-->
                             <div class="small-box text-bg-success">
                                 <div class="inner">
-                                    <h3>87<sup class="fs-5">%</sup></h3>
+                                    <h3>17<sup class="fs-5">%</sup></h3>
 
                                     <p>Bounce Rate</p>
                                 </div>
@@ -823,20 +823,136 @@ function verifyPayment(reference) {
                         <!--end::Col-->
                         <div class="col-lg-3 col-6">
                             <!--begin::Small Box Widget 4-->
+
+
+
+
                             <div class="small-box text-bg-danger">
                                 <div class="inner">
-                                    <h3>16,000$</h3>
-
-                                    <p>total money payout</p>
+                                    <h3>30,000</h3>
+                                    <p>signup bonus</p>
                                 </div>
                                 <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M2.25 13.5a8.25 8.25 0 018.25-8.25.75.75 0 01.75.75v6.75H18a.75.75 0 01.75.75 8.25 8.25 0 01-16.5 0z"></path>
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"></path>
                                 </svg>
-                                <a href="#" class="small-box-footer">
+                                <a href="#" id="bonus-info" class="small-box-footer">
                                     More info <i class="fa-solid fa-arrow-circle-right"></i>
                                 </a>
                             </div>
+                            
+                            <script>
+                            document.getElementById('bonus-info').addEventListener('click', function(e) {
+                                e.preventDefault(); // Prevent the default action
+                                const isRegistered = localStorage.getItem('isRegistered'); // Check if the user is registered
+                            
+                                if (!isRegistered) {
+                                    Swal.fire({
+                                        title: 'Registration Required',
+                                        text: 'You need to register before you can access the signup bonus.',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Register',
+                                        cancelButtonText: 'Cancel'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            Swal.fire({
+                                                title: 'Registration Fee',
+                                                text: 'You are about to pay 10,000 Naira for registration where you get 20,000 as a registration bonus.',
+                                                icon: 'info',
+                                                input: 'text',
+                                                inputLabel: 'Enter your email',
+                                                inputPlaceholder: 'example@gmail.com',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Pay',
+                                                cancelButtonText: 'Decline',
+                                                preConfirm: (email) => {
+                                                    const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+                                                    if (!emailPattern.test(email)) {
+                                                        Swal.showValidationMessage('Please enter a valid Gmail address');
+                                                    }
+                                                    return email;
+                                                }
+                                            }).then((paymentResult) => {
+                                                const email = paymentResult.value;
+                                                if (paymentResult.isConfirmed && email) {
+                                                    const registrationFee = 10000;
+                                                    PayWithPaystack(registrationFee, email);
+                                                }
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    // If registered, you can handle other logic here, like redirecting to another page
+                                    window.location.href = 'signup_bonus.html'; // Example page
+                                }
+                            });
+                            
+                            // Paystack payment function
+                            function PayWithPaystack(amount, email) {
+                                let handler = PaystackPop.setup({
+                                    key: 'pk_test_88d49b9eac13d6a6931673e62342b85daeb39601', // Paystack public key
+                                    email: email,
+                                    amount: amount * 100, // Amount in kobo
+                                    currency: 'NGN',
+                                    metadata: {
+                                        transaction_type: 'registration'
+                                    },
+                                    ref: '' + Math.floor((Math.random() * 1000000000) + 1), // Generate a unique reference number
+                            
+                                    onClose: function() {
+                                        Swal.fire({
+                                            title: 'Transaction not completed',
+                                            text: 'It seems the transaction was not completed.',
+                                            icon: 'warning',
+                                            confirmButtonText: 'Okay'
+                                        });
+                                    },
+                            
+                                    callback: function(response) {
+                                        // Call Paystack's verify endpoint on the user side
+                                        verifyPayment(response.reference).then(isVerified => {
+                                            if (isVerified) {
+                                                Swal.fire({
+                                                    title: 'Payment Successful!',
+                                                    text: `Reference: ${response.reference}. Your payment is successful, you can now access all features!`,
+                                                    icon: 'success',
+                                                    confirmButtonText: 'Okay'
+                                                }).then(() => {
+                                                    localStorage.setItem('isRegistered', 'true'); // Mark user as registered
+                                                    window.location.href = 'dashboard.html'; // Redirect to dashboard
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    title: 'Payment Verification Failed',
+                                                    text: 'We could not verify your payment. Please try again.',
+                                                    icon: 'error',
+                                                    confirmButtonText: 'Okay'
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            
+                                handler.openIframe();
+                            }
+                            
+                            // Client-side payment verification (mocked without backend)
+                            function verifyPayment(reference) {
+                                // You would normally send a request to your server to verify the transaction
+                                // Mocking a secure check on the client side for demonstration
+                                return new Promise((resolve) => {
+                                    // Simulating a successful payment verification after 2 seconds
+                                    setTimeout(() => {
+                                        resolve(true); // Assume verification is successful
+                                    }, 2000);
+                                });
+                            }
+                            </script>
+                            
+
+
+
                             <!--end::Small Box Widget 4-->
                         </div>
                         <!--end::Col-->
@@ -860,7 +976,7 @@ function verifyPayment(reference) {
                             <div class="timeline">
                                 <!-- timeline time label -->
                                 <div class="time-label">
-                                    <span class="text-bg-danger">10 Feb. 2023</span>
+                                    <span id="customRegistrationDate" class="text-bg-danger">Loading date...</span>
                                 </div>
                                 <!-- /.timeline-label -->
                                 <!-- timeline item -->
@@ -868,24 +984,78 @@ function verifyPayment(reference) {
                                     <i class="timeline-icon fa-solid fa-envelope text-bg-primary">
                                     </i>
                                     <div class="timeline-item">
-                                        <span class="time">
-                                            <i class="fa-solid fa-clock"></i> 12:05
+                                        <span class="time" id="registrationTime">
+                                            <i class="fa-solid fa-clock"></i> Loading time...
                                         </span>
-                                        <h3 class="timeline-header">
-                                            <a href="#">Support Team</a> sent you an email
-                                        </h3>
+<!-- script for timeline-label and timeline item  -->
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+    const storedRegistrationDate = localStorage.getItem('registrationDate');
+    const storedRegistrationTime = localStorage.getItem('registrationTime');
+    
+    let registrationDate, registrationTime;
 
-                                        <div class="timeline-body">
-                                            Etsy doostang zoodles disqus groupon greplin oooj voxy
-                                            zoodles, weebly ning heekya handango imeem plugg dopplr
-                                            jibjab, movity jajah plickers sifteo edmodo ifttt
-                                            zimbra. Babblely odeo kaboodle quora plaxo ideeli hulu
-                                            weebly balihoo...
+    // If registration date and time are not stored, set them to the current date and time
+    if (!storedRegistrationDate || !storedRegistrationTime) {
+        const now = new Date();
+        registrationDate = now;
+        registrationTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Store date and time in localStorage
+        localStorage.setItem('registrationDate', registrationDate);
+        localStorage.setItem('registrationTime', registrationTime);
+    } else {
+        registrationDate = new Date(storedRegistrationDate);
+        registrationTime = storedRegistrationTime;
+    }
+
+    // Format the registration date as 'DD MMM. YYYY' (e.g., '10 Feb. 2023')
+    const options = { day: '2-digit', month: 'short', year: 'numeric' };
+    const formattedDate = registrationDate.toLocaleDateString('en-US', options).replace(',', '');
+
+    // Update the date and time elements
+    document.getElementById('customRegistrationDate').innerHTML = `<span class="text-bg-danger">${formattedDate}</span>`;
+    document.getElementById('registrationTime').innerHTML = `<i class="fa-solid fa-clock"></i> ${registrationTime}`;
+});
+
+                                        </script>
+                                        <h3 class="timeline-header">
+                                            <a href="mailto:assetventure3@gmail.com?subject=Support Request&body=Hello, I need help with...">Support Team</a> sent you an email
+                                        </h3>
+                                        
+
+                                        <div class="timeline-body" id="messageContainer">
+                                            Dear <span id="username"></span>,
+                                        
+                                            You have successfully signed in. However, you are not registered yet. Kindly register to gain full access to our features. Don’t forget to share your invite link to unlock additional benefits!
+                                        
+                                            <div class="expanded-content" style="display: none;">
+                                                <p>AssetVenture is your gateway to earning opportunities by completing various tasks. Join us now and explore all the exciting features we offer!</p>
+                                            </div>
                                         </div>
                                         <div class="timeline-footer">
-                                            <a class="btn btn-primary btn-sm">Read more</a>
-                                            <a class="btn btn-danger btn-sm">Delete</a>
+                                            <a class="btn btn-primary btn-sm" id="readMoreBtn">Read more</a>
+                                            <a class="btn btn-danger btn-sm" id="deleteBtn">Delete</a>
                                         </div>
+                                        
+                                        <script>
+                                            // Get the username from localStorage
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                const username = localStorage.getItem('username') || "User"; // Fallback if no username is found
+                                                document.getElementById('username').textContent = username;
+                                            });
+                                        
+                                            document.getElementById('readMoreBtn').addEventListener('click', function() {
+                                                const expandedContent = document.querySelector('.expanded-content');
+                                                expandedContent.style.display = expandedContent.style.display === 'none' ? 'block' : 'none';
+                                            });
+                                        
+                                            document.getElementById('deleteBtn').addEventListener('click', function() {
+                                                const messageContainer = document.getElementById('messageContainer');
+                                                messageContainer.style.display = 'none'; // This will hide the container
+                                            });
+                                        </script>
+                                        
                                     </div>
                                 </div>
                                 <!-- END timeline item -->
@@ -931,50 +1101,70 @@ function verifyPayment(reference) {
                                 </div>
                                 <!-- /.timeline-label -->
                                 <!-- timeline item -->
-                                <div>
-                                    <i class="timeline-icon fa-solid fa-camera text-bg-primary">
-                                    </i>
-                                    <div class="timeline-item">
-                                        <span class="time">
-                                            <i class="fa-solid fa-clock"></i> 2 days ago
-                                        </span>
-                                        <h3 class="timeline-header">
-                                            <a href="#">Mina Lee</a> uploaded new photos
-                                        </h3>
-                                        <div class="timeline-body">
-                                            <img src="dist/assets/img/user1-128x128.jpg" alt="...">
-                                            <img src="dist/assets/img/user1-128x128.jpg" alt="...">
-                                            <img src="dist/assets/img/user1-128x128.jpg" alt="...">
-                                            <img src="dist/assets/img/user1-128x128.jpg" alt="...">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- END timeline item -->
-                                <!-- timeline item -->
-                                <div>
-                                    <i class="timeline-icon fa-solid fa-video text-bg-info"></i>
+                               <!-- timeline item for the image -->
+<div>
+    <i class="timeline-icon fa-solid fa-camera text-bg-primary"></i>
+    <div class="timeline-item">
+        <span class="time">
+            <i class="fa-solid fa-clock"></i> 2 days ago
+        </span>
+        <h3 class="timeline-header">
+            <a href="#">Happiness</a> uploaded new photos
+        </h3>
+        <div class="timeline-body">
+            <img src="dist/assets/img/user1-128x128.jpg" alt="User image" style="cursor: pointer;" id="userImage">
+        </div>
+    </div>
+</div>
+<!-- END timeline item -->
 
-                                    <div class="timeline-item">
-                                        <span class="time">
-                                            <i class="fa-solid fa-clock"></i> 5 days ago
-                                        </span>
+<!-- timeline item for the video -->
+<div>
+    <i class="timeline-icon fa-solid fa-video text-bg-info"></i>
+    <div class="timeline-item">
+        <span class="time">
+            <i class="fa-solid fa-clock"></i> 5 days ago
+        </span>
+        <h3 class="timeline-header">
+            <a href="#">Mr. Doe</a> shared a video
+        </h3>
+        <div class="timeline-body">
+            <div class="ratio ratio-16x9">
+                <iframe src="https://www.youtube.com/embed/tMWkeBIohBs" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="timeline-footer">
+            <a href="#" class="btn btn-sm text-bg-warning">
+                See comments
+            </a>
+        </div>
+    </div>
+</div>
+<!-- END timeline item -->
 
-                                        <h3 class="timeline-header">
-                                            <a href="#">Mr. Doe</a> shared a video
-                                        </h3>
+<!-- Modal for displaying the image -->
+<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center;">
+    <img id="modalImage" src="" alt="Full-size image" style="max-width: 100%; max-height: 100%;">
+</div>
 
-                                        <div class="timeline-body">
-                                            <div class="ratio ratio-16x9">
-                                                <iframe src="https://www.youtube.com/embed/tMWkeBIohBs" allowfullscreen></iframe>
-                                            </div>
-                                        </div>
-                                        <div class="timeline-footer">
-                                            <a href="#" class="btn btn-sm text-bg-warning">
-                                                See comments
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+<script>
+    // Get the image and modal elements
+    const userImage = document.getElementById('userImage');
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+
+    // Add click event to the image
+    userImage.addEventListener('click', function() {
+        modalImage.src = this.src; // Set the source of the modal image to the clicked image
+        imageModal.style.display = 'flex'; // Show the modal
+    });
+
+    // Close the modal when clicking on it
+    imageModal.addEventListener('click', function() {
+        this.style.display = 'none'; // Hide the modal
+    });
+</script>
+
                                 <!-- END timeline item -->
                                 <div>
                                     <i class="timeline-icon fa-solid fa-clock text-bg-secondary">
@@ -994,12 +1184,12 @@ function verifyPayment(reference) {
         <!--begin::Footer-->
         <footer class="app-footer">
             <!--begin::To the end-->
-            <div class="float-end d-none d-sm-inline">Anything you want</div>
+            <div class="float-end d-none d-sm-inline">IN UNITY WE STAND.</div>
             <!--end::To the end-->
             <!--begin::Copyright-->
             <strong>
-                Copyright &copy; 2014-2023
-                <a href="#">AdminLTE.io</a>.
+                Copyright &copy; 2018-2024
+                <a href="#">AssetVenture</a>.
             </strong>
             All rights reserved.
             <!--end::Copyright-->
