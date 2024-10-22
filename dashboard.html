@@ -58,15 +58,16 @@
                         <a href="#" class="nav-link">Home</a>
                     </li>
                     <li class="nav-item d-none d-md-block">
-                        <a href="https://wa.me/09162181010" class="nav-link">Contact</a>
+                        <a href="mailto:assetventure3@gmail.com" class="nav-link">Email us</a>
                     </li>
+                    
                 </ul>
                 <!--end::Start Navbar Links-->
 
                 <!--begin::End Navbar Links-->
                 <ul class="navbar-nav ms-auto">
                     <!--begin::Navbar Search-->
-                    <form class="form-inline ml-3">
+                    <!-- <form class="form-inline ml-3">
                         <div class="input-group input-group-sm">
                           <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                           <div class="input-group-append">
@@ -75,7 +76,7 @@
                             </button>
                           </div>
                         </div>
-                      </form>
+                      </form> -->
                     
                     <!--end::Navbar Search-->
 
@@ -90,31 +91,45 @@
                     </li>
                     <!--end::Messages Dropdown Menu-->
 
-                    <!--begin::Notifications Dropdown Menu-->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                            <i class="fa-regular fa-bell"></i>
-                            <span class="navbar-badge badge text-bg-warning">0</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end" id="notification-dropdown">
-                            <span class="dropdown-item dropdown-header" id="notification-count">0 Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <div id="notification-items"></div> <!-- This is where notifications will be injected -->
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                        </div>
-                        
-                    </li>
+                    <!--begin::app download-->
+                    <!-- Include SweetAlert2 for the alert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<li class="nav-item dropdown">
+    <a class="nav-link" id="downloadApp" href="javascript:void(0);">
+        <i class='bx bxs-cloud-upload' style="font-size: 25px;"></i>
+    </a>
+</li>
+
+<script>
+document.getElementById('downloadApp').addEventListener('click', function() {
+    Swal.fire({
+        title: 'You are about to download our app!',
+        text: 'Kindly click download to proceed.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Download',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Use the direct download link to your app file hosted online
+            window.location.href = 'https://www.mediafire.com/file/w0rgoxbuvxj1r43/assetventure_1_1.0.apk/file'; // Replace with your app's URL
+        }
+    });
+});
+</script>
+
+                    
                     <!--end::Notifications Dropdown Menu-->
 
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img id="navUserImage" src="dist/assets/img/user2-160x160.jpg" class="user-image rounded-circle shadow" alt="User Image">
+                            <img id="navUserImage" src="dist/assets/img/no_image.jpg" class="user-image rounded-circle shadow" alt="User Image">
                             <span class="d-none d-md-inline" id="userNameDisplay">Alexander Pierce</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li class="user-header text-bg-primary">
-                                <img id="headerUserImage" src="dist/assets/img/user2-160x160.jpg" class="rounded-circle shadow" alt="User Image">
+                                <img id="headerUserImage" src="dist/assets/img/no_image.jpg" class="rounded-circle shadow" alt="User Image">
                                 <p>
                                     <span id="headerUserName">Alexander Pierce</span>
                                     <small>Member since <span id="registrationDate">Nov. 2023</span></small>
@@ -167,59 +182,95 @@
 
 
 
-                    <script>
-                        let isImageSelected = false;
-                    
-                        function selectImage(event) {
-                            const file = event.target.files[0];
-                            if (!file) {
-                                return;
-                            }
-                    
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                // Update both the user nav image and the header image
-                                document.getElementById('navUserImage').src = e.target.result;
-                                document.getElementById('headerUserImage').src = e.target.result;
-                    
-                                // Hide the image selection container
-                                document.getElementById('imageSelectionContainer').style.display = 'none';
-                    
-                                isImageSelected = true; // Mark that an image has been selected
-                                saveSelectedImage(e.target.result); // Save the selected image in localStorage
-                            };
-                    
-                            reader.readAsDataURL(file); // Convert the image file to base64
-                        }
-                    
-                        function saveSelectedImage(imageSrc) {
-                            localStorage.setItem('selectedImage', imageSrc); // Save image in localStorage
-                            alert("Image selected: " + imageSrc);
-                        }
-                    
-                        // Load username and registration date from localStorage and update UI
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const username = localStorage.getItem('username') || "Alexander Pierce";
-                            const registrationDate = new Date().toLocaleDateString();
-                    
-                            document.getElementById('userNameDisplay').textContent = username;
-                            document.getElementById('headerUserName').textContent = username;
-                            document.getElementById('registrationDate').innerText = registrationDate;
-                    
-                            // Load previously selected image from localStorage
-                            loadImageFromLocalStorage();
-                        });
-                    
-                        function loadImageFromLocalStorage() {
-                            const savedImage = localStorage.getItem('selectedImage');
-                            if (savedImage) {
-                                document.getElementById('navUserImage').src = savedImage;
-                                document.getElementById('headerUserImage').src = savedImage;
-                                isImageSelected = true; // Mark that an image has been selected
-                                document.getElementById('imageSelectionContainer').style.display = 'none'; // Hide image selection
-                            }
-                        }
-                    </script>
+<script>
+    let isImageSelected = false;
+
+    // Function to handle image selection and saving
+    function selectImage(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Update both the user nav image and the header image
+            document.getElementById('navUserImage').src = e.target.result;
+            document.getElementById('headerUserImage').src = e.target.result;
+
+            // Hide the image selection container
+            document.getElementById('imageSelectionContainer').style.display = 'none';
+
+            isImageSelected = true; // Mark that an image has been selected
+            saveSelectedImage(e.target.result); // Save the selected image in localStorage
+        };
+
+        reader.readAsDataURL(file); // Convert the image file to base64
+    }
+
+    // Function to save the selected image in localStorage
+    function saveSelectedImage(imageSrc) {
+        localStorage.setItem('selectedImage', imageSrc); // Save image in localStorage
+        alert("Image selected: " + imageSrc);
+    }
+
+    // Function to fetch username from IndexedDB
+    function getUsernameFromIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('UserDatabase', 1); // Open your IndexedDB
+            request.onerror = function(event) {
+                reject('Error opening IndexedDB');
+            };
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction(['users'], 'readonly');
+                const objectStore = transaction.objectStore('users');
+                
+                // Assuming loggedInUser email is stored in localStorage
+                const loggedInUserEmail = localStorage.getItem('loggedInUser');
+                const getRequest = objectStore.get(loggedInUserEmail); // Fetch user data by email
+
+                getRequest.onerror = function(event) {
+                    reject('Error retrieving username');
+                };
+                getRequest.onsuccess = function(event) {
+                    resolve(getRequest.result ? getRequest.result.username : "Alexander Pierce"); // Resolve with username or default
+                };
+            };
+        });
+    }
+
+    // Load username from IndexedDB and registration date from localStorage
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            // Get the username from IndexedDB
+            const username = await getUsernameFromIndexedDB();
+            document.getElementById('userNameDisplay').textContent = username;
+            document.getElementById('headerUserName').textContent = username;
+
+            // Get the registration date from localStorage
+            const registrationDate = new Date().toLocaleDateString();
+            document.getElementById('registrationDate').innerText = registrationDate;
+
+            // Load previously selected image from localStorage
+            loadImageFromLocalStorage();
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    // Function to load image from localStorage
+    function loadImageFromLocalStorage() {
+        const savedImage = localStorage.getItem('selectedImage');
+        if (savedImage) {
+            document.getElementById('navUserImage').src = savedImage;
+            document.getElementById('headerUserImage').src = savedImage;
+            isImageSelected = true; // Mark that an image has been selected
+            document.getElementById('imageSelectionContainer').style.display = 'none'; // Hide image selection
+        }
+    }
+</script>
+
                     
                     <style>
                         .image-container {
@@ -239,6 +290,354 @@
                     <!--end::User Menu Dropdown-->
                 </ul>
                 <!--end::End Navbar Links-->
+                <div id="notificationContainer" style="display: none;">
+                    <div class="user-block">
+                        <img class="img-circle" id="notificationImage" src="" alt="User Image">
+                        <span class="username"><a href="#" id="notificationUsername"></a></span>
+                        <span class="description" id="notificationMessage"></span>
+                    </div>
+                </div>
+                <style>
+                    #notificationContainer {
+                        position: fixed;
+                        top: 0;
+                        display: none; /* Initially hidden */
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 300px;
+                        background-color: #f4f4f4;
+                        border: 1px solid #ccc;
+                        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+                        z-index: 1000;
+                        padding: 10px;
+                        display: flex;
+                        align-items: center;
+                        animation: dropNotification 1s ease forwards;
+                    }
+                
+                    .user-block {
+                        display: flex;
+                        align-items: center;
+                    }
+                
+                    .user-block img {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        margin-right: 10px;
+                    }
+                
+                    .username a {
+                        font-weight: bold;
+                        color: #333;
+                    }
+                
+                    .description {
+                        font-size: 12px;
+                        color: #555;
+                        margin-left: auto; /* Pushes the description to the right */
+                    }
+                
+                    /* Drop animation */
+                    @keyframes dropNotification {
+                        from { top: -100px; }
+                        to { top: 0; }
+                    }
+                
+                    /* Slide-up animation */
+                    @keyframes slideUpNotification {
+                        from { top: 0; opacity: 1; }
+                        to { top: -100px; opacity: 0; }
+                    }
+
+
+
+#notificationContainer {
+    display: none; /* Initially hidden */
+    /* Add additional styles as needed */
+}
+
+                </style>
+                            
+
+                            <script>
+                                // Array of notification messages
+                                const notifications = [
+                                {
+                                        img: "dist/assets/img/avatar-1.png",
+                                        username: "Mason King",
+                                        message: "Mason just withdrew 130,000!"
+                                    },
+                                    {
+        img: "dist/assets/img/IMG-20221008-WA0023.jpg",
+        username: "Jonathan Burke Jr.",
+        message: "James just withdrew 50,000 now!"
+    },
+    {
+        img: "dist/assets/img/IMG-20221216-WA0014.jpg",
+        username: "Sarah Miller",
+        message: "Sarah just deposited 100,000!"
+    },
+    {
+        img: "dist/assets/img/IMG-20221008-WA0023.jpg",
+        username: "Michael Smith",
+        message: "Michael just cashed out 75,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Emily Johnson",
+        message: "Emily just withdrew 150,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-2.png",
+        username: "Chris Brown",
+        message: "Chris deposited 200,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-3.png",
+        username: "Jessica Williams",
+        message: "Jessica cashed out 60,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-4.png",
+        username: "David Clark",
+        message: "David just withdrew 120,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-5.png",
+        username: "Sophia Lee",
+        message: "Sophia deposited 250,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-6.png",
+        username: "Daniel Moore",
+        message: "Daniel cashed out 90,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-7.png",
+        username: "Grace Taylor",
+        message: "Grace just withdrew 180,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-8.png",
+        username: "Jack Harris",
+        message: "Jack deposited 50,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-9.png",
+        username: "Olivia Martin",
+        message: "Olivia cashed out 45,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-10.png",
+        username: "Ethan Lewis",
+        message: "Ethan just withdrew 65,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-11.png",
+        username: "Lily Walker",
+        message: "Lily deposited 120,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-12.png",
+        username: "Noah Hall",
+        message: "Noah cashed out 200,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-13.png",
+        username: "Zoe Adams",
+        message: "Zoe just withdrew 40,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-14.png",
+        username: "Lucas Scott",
+        message: "Lucas deposited 150,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-15.png",
+        username: "Ava White",
+        message: "Ava cashed out 100,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-16.png",
+        username: "Mason Turner",
+        message: "Mason just withdrew 300,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-17.png",
+        username: "Isabella Green",
+        message: "Isabella deposited 80,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-18.png",
+        username: "Logan King",
+        message: "Logan cashed out 250,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-19.png",
+        username: "Ella Wright",
+        message: "Ella just withdrew 130,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-20.png",
+        username: "Alexander Baker",
+        message: "Alexander deposited 90,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-21.png",
+        username: "Mia Carter",
+        message: "Mia cashed out 110,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-22.png",
+        username: "Henry Rivera",
+        message: "Henry just withdrew 170,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-23.png",
+        username: "Amelia Campbell",
+        message: "Amelia deposited 140,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-24.png",
+        username: "Benjamin Nelson",
+        message: "Benjamin cashed out 70,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-25.png",
+        username: "Emily Mitchell",
+        message: "Emily just withdrew 85,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Jacob Perez",
+        message: "Jacob deposited 200,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Madison Roberts",
+        message: "Madison cashed out 50,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Matthew Lewis",
+        message: "Matthew just withdrew 250,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Chloe Wilson",
+        message: "Chloe deposited 30,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Andrew Smith",
+        message: "Andrew cashed out 65,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Ella Johnson",
+        message: "Ella just withdrew 100,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Mia Clark",
+        message: "Mia deposited 75,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "William Martinez",
+        message: "William cashed out 90,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Sophia Rodriguez",
+        message: "Sophia just withdrew 45,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Daniel Hernandez",
+        message: "Daniel deposited 210,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Olivia Martinez",
+        message: "Olivia cashed out 40,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Ethan Moore",
+        message: "Ethan just withdrew 95,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Isabella Taylor",
+        message: "Isabella deposited 160,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Aiden Anderson",
+        message: "Aiden cashed out 125,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Charlotte Thomas",
+        message: "Charlotte just withdrew 220,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "James Thompson",
+        message: "James deposited 50,000!"
+    },
+    {
+        img: "dist/assets/img/avatar-1.png",
+        username: "Harper Lee",
+        message: "Harper cashed out 175,000!"
+    },
+                                    // Add more notifications here...
+                                ];
+                                let currentNotificationIndex = 0;
+
+// Function to show notification
+function showNotification() {
+    // Get a random index from the notifications array
+    const randomIndex = Math.floor(Math.random() * notifications.length);
+    const notification = notifications[randomIndex];
+
+    // Update notification content
+    document.getElementById("notificationImage").src = notification.img;
+    document.getElementById("notificationUsername").innerHTML = notification.username;
+    document.getElementById("notificationMessage").innerHTML = notification.message;
+
+    // Show the notification
+    const notificationContainer = document.getElementById("notificationContainer");
+    notificationContainer.style.display = "flex";
+    notificationContainer.style.animation = ""; // Reset animation
+
+    // Duration settings
+    const showDuration = 3000; // Show for 3 seconds
+    const hideDuration = 1000; // 1 second for hiding
+
+    // Hide notification after the show duration
+    setTimeout(() => {
+        notificationContainer.style.animation = "slideUpNotification 1s ease forwards"; // Apply slide-up animation
+
+        // Hide the notification after the animation duration
+        setTimeout(() => {
+            notificationContainer.style.display = "none";
+        }, hideDuration); // Duration of the slide-up animation
+    }, showDuration); // Show duration
+}
+
+// Start the notification rotation every 8 seconds
+setInterval(showNotification, 8000);
+
+// Show the first notification immediately when the page loads
+showNotification();
+
+
+                            </script>
+                            
+                            
             </div>
             <!--end::Container-->
         </nav>
@@ -837,7 +1236,7 @@ function verifyPayment(reference) {
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M12.75 3a.75.75 0 01.75-.75 8.25 8.25 0 018.25 8.25.75.75 0 01-.75.75h-7.5a.75.75 0 01-.75-.75V3z"></path>
                                 </svg>
                                 <a href="#" id="bonus-info" class="small-box-footer">
-                                    More info <i class="fa-solid fa-arrow-circle-right"></i>
+                                    withdraw <i class="fa-solid fa-arrow-circle-right"></i>
                                 </a>
                             </div>
                             
@@ -1020,15 +1419,15 @@ function verifyPayment(reference) {
 
                                         </script>
                                         <h3 class="timeline-header">
-                                            <a href="mailto:assetventure3@gmail.com?subject=Support Request&body=Hello, I need help with...">Support Team</a> sent you an email
+                                            <a href="mailto:assetventure3@gmail.com?subject=Support Request&body=Hello, I need help with...">Asset Venture</a> sent you an email
                                         </h3>
                                         
 
                                         <div class="timeline-body" id="messageContainer">
                                             Dear <span id="username"></span>,
-                                        
+                                            
                                             You have successfully signed in. However, you are not registered yet. Kindly register to gain full access to our features. Don’t forget to share your invite link to unlock additional benefits!
-                                        
+                                            
                                             <div class="expanded-content" style="display: none;">
                                                 <p>AssetVenture is your gateway to earning opportunities by completing various tasks. Join us now and explore all the exciting features we offer!</p>
                                             </div>
@@ -1039,22 +1438,47 @@ function verifyPayment(reference) {
                                         </div>
                                         
                                         <script>
-                                            // Get the username from localStorage
                                             document.addEventListener('DOMContentLoaded', function() {
-                                                const username = localStorage.getItem('username') || "User"; // Fallback if no username is found
-                                                document.getElementById('username').textContent = username;
-                                            });
+                                                let db;
+                                                const request = indexedDB.open('UserDatabase', 1);
                                         
-                                            document.getElementById('readMoreBtn').addEventListener('click', function() {
-                                                const expandedContent = document.querySelector('.expanded-content');
-                                                expandedContent.style.display = expandedContent.style.display === 'none' ? 'block' : 'none';
-                                            });
+                                                request.onsuccess = function(event) {
+                                                    db = event.target.result;
                                         
-                                            document.getElementById('deleteBtn').addEventListener('click', function() {
-                                                const messageContainer = document.getElementById('messageContainer');
-                                                messageContainer.style.display = 'none'; // This will hide the container
+                                                    // Retrieve the logged-in user's email from localStorage
+                                                    const email = localStorage.getItem('loggedInUser');
+                                        
+                                                    // Fetch the user details from IndexedDB
+                                                    if (email) {
+                                                        const transaction = db.transaction(['users'], 'readonly');
+                                                        const objectStore = transaction.objectStore('users');
+                                                        const getUserRequest = objectStore.get(email);
+                                        
+                                                        getUserRequest.onsuccess = function(event) {
+                                                            const user = event.target.result;
+                                                            if (user) {
+                                                                document.getElementById('username').textContent = user.username; // Set the username
+                                                            } else {
+                                                                document.getElementById('username').textContent = "User"; // Fallback if no user found
+                                                            }
+                                                        };
+                                                    } else {
+                                                        document.getElementById('username').textContent = "User"; // Fallback if no email found
+                                                    }
+                                                };
+                                        
+                                                document.getElementById('readMoreBtn').addEventListener('click', function() {
+                                                    const expandedContent = document.querySelector('.expanded-content');
+                                                    expandedContent.style.display = expandedContent.style.display === 'none' ? 'block' : 'none';
+                                                });
+                                        
+                                                document.getElementById('deleteBtn').addEventListener('click', function() {
+                                                    const messageContainer = document.getElementById('messageContainer');
+                                                    messageContainer.style.display = 'none'; // This will hide the container
+                                                });
                                             });
                                         </script>
+                                        
                                         
                                     </div>
                                 </div>
@@ -1068,7 +1492,7 @@ function verifyPayment(reference) {
                                             <i class="fa-solid fa-clock"></i> 5 mins ago
                                         </span>
                                         <h3 class="timeline-header no-border">
-                                            <a href="#">Sarah Young</a> accepted your friend request
+                                            <a href="#">Sarah Young</a> just registerd
                                         </h3>
                                     </div>
                                 </div>
@@ -1082,12 +1506,10 @@ function verifyPayment(reference) {
                                             <i class="fa-solid fa-clock"></i> 27 mins ago
                                         </span>
                                         <h3 class="timeline-header">
-                                            <a href="#">Jay White</a> commented on your post
+                                            <a href="#">Jay White</a> tagged Asset Venture 
                                         </h3>
                                         <div class="timeline-body">
-                                            Take me to your leader! Switzerland is small and
-                                            neutral! We are more like Germany, ambitious and
-                                            misunderstood!
+                                            AssetVenture is a beacon of trust and innovation in the ever-evolving landscape of digital platforms. Much like Switzerland, known for its neutrality and stability, AssetVenture offers a secure environment where users can thrive. However, we are more like Germany—ambitious, dynamic, and often misunderstood.
                                         </div>
                                         <div class="timeline-footer">
                                             <a class="btn btn-warning btn-sm">View comment</a>
@@ -1102,20 +1524,24 @@ function verifyPayment(reference) {
                                 <!-- /.timeline-label -->
                                 <!-- timeline item -->
                                <!-- timeline item for the image -->
-<div>
-    <i class="timeline-icon fa-solid fa-camera text-bg-primary"></i>
-    <div class="timeline-item">
-        <span class="time">
-            <i class="fa-solid fa-clock"></i> 2 days ago
-        </span>
-        <h3 class="timeline-header">
-            <a href="#">Happiness</a> uploaded new photos
-        </h3>
-        <div class="timeline-body">
-            <img src="dist/assets/img/user1-128x128.jpg" alt="User image" style="cursor: pointer;" id="userImage">
-        </div>
-    </div>
-</div>
+                               <div>
+                                <i class="timeline-icon fa-solid fa-camera text-bg-primary"></i>
+                                <div class="timeline-item">
+                                    <span class="time">
+                                        <i class="fa-solid fa-clock"></i> 2 days ago
+                                    </span>
+                                    <h3 class="timeline-header">
+                                        <a href="#">Happiness</a> uploaded new photos
+                                    </h3>
+                                    <div class="timeline-body" style="position: relative;">
+                                        <img src="dist/assets/img/user1-128x128.jpg" alt="User image" style="cursor: pointer; display: block; margin-top: 65px;" id="userImage">
+                                        <div style="position: absolute; top: 10px; left: 10px; color: rgb(0, 0, 0);">
+                                            i just withdraw my signup bonus after register now am so glad
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
 <!-- END timeline item -->
 
 <!-- timeline item for the video -->
@@ -1126,11 +1552,11 @@ function verifyPayment(reference) {
             <i class="fa-solid fa-clock"></i> 5 days ago
         </span>
         <h3 class="timeline-header">
-            <a href="#">Mr. Doe</a> shared a video
+            <a href="#">AssetVenture</a> shared a video
         </h3>
         <div class="timeline-body">
             <div class="ratio ratio-16x9">
-                <iframe src="https://www.youtube.com/embed/tMWkeBIohBs" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/ZaHnAjIwv90" allowfullscreen></iframe>
             </div>
         </div>
         <div class="timeline-footer">
@@ -1173,6 +1599,152 @@ function verifyPayment(reference) {
                             </div>
                         </div>
                         <!-- /.col -->
+                        <div class="card card-widget">
+                            <div class="card-header">
+                              <div class="user-block">
+                                <img class="img-circle" src="dist/assets/img/photo3.jpg" alt="User Image">
+                                <span class="username"><a href="#">Johnson</a></span>
+                                <span class="description">Shared publicly - 7:30 PM Today</span>
+                              </div>
+                              <!-- /.user-block -->
+                              <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-toggle="tooltip" title="Mark as read">
+                                  <i class="far fa-circle"></i></button>
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                                </button>
+                              </div>
+                              <!-- /.card-tools -->
+                            </div>
+
+
+
+
+
+
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                              <img class="img-fluid pad" src="dist/assets/img/photo2.png" alt="Photo">
+              
+                              <p>I took this photo this morning. staying home enjoying assetventure funds whoooooo</p>
+                              <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i> Share</button>
+                              <button type="button" class="btn btn-default btn-sm"><i class="far fa-thumbs-up"></i> Like</button>
+                              <span class="float-right text-muted">96k likes - 37k comments</span>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer card-comments">
+                                <div class="card-comment">
+                                    <div class="d-flex align-items-center">
+                                        <!-- User image -->
+                                        <img class="img-circle img-sm" src="dist/assets/img/avatar-18.png" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                                
+                                        <span class="username">
+                                            Maria Gonzales
+                                            <span class="text-muted float-right">8:03 PM Today</span>
+                                        </span><!-- /.username -->
+                                    </div>
+                                
+                                    <div class="comment-text">
+                                        It is a long established fact that a reader will be distracted
+                                        by the readable content of a page when looking at its layout.
+                                    </div>
+                                </div>
+                                
+                                <!-- /.comment-text -->
+                              </div>
+                              <!-- /.card-comment -->
+                              <div class="card-comment">
+                                <div class="d-flex align-items-center">
+                                    <!-- User image -->
+                                    <img class="img-circle img-sm" src="dist/assets/img/avatar-23.png" alt="User Image" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+                            
+                                    <span class="username">
+                                        Luna Stark
+                                        <span class="text-muted float-right">8:03 PM Today</span>
+                                    </span><!-- /.username -->
+                                </div>
+                                
+                                <div class="comment-text">
+                                    It is a long established fact that a reader will be distracted
+                                    by the readable content of a page when looking at its layout.
+                                </div>
+                                
+                                <div class="timeline-footer d-flex justify-content-end">
+                                    <a href="#" class="btn btn-sm text-bg-warning">
+                                        See more comments
+                                    </a>
+                                </div>
+                            </div>
+                            
+                                
+                                </div>
+
+                                <!-- /.comment-text -->
+                              </div>
+                              <!-- /.card-comment -->
+                            </div>
+                            <!-- /.card-footer -->
+
+
+
+
+
+                            <div class="card-footer">
+                              <form action="#" method="post">
+                                <!-- <img class="img-fluid img-circle img-sm" src="dist/img/user4-128x128.jpg" alt="Alt Text"> -->
+                                <!-- .img-push is used to add margin to elements next to floating images -->
+                                <div class="img-push">
+                                    <input 
+                                        type="text" 
+                                        class="form-control form-control-sm" 
+                                        placeholder="Press enter to post comment" 
+                                        id="commentInput"
+                                        onkeypress="checkRegistration(event)"
+                                    >
+                                </div>
+<script>
+    // Function to check if the user is registered
+function isRegistered() {
+    // Implement your logic to check if the user is registered
+    // This could be a simple check in localStorage, IndexedDB, or a variable
+    return localStorage.getItem('isRegistered') === 'true'; // Example check
+}
+
+// Function to handle the comment input keypress
+function checkRegistration(event) {
+    if (event.key === 'Enter') {
+        if (!isRegistered()) {
+            // Show SweetAlert if the user is not registered
+            Swal.fire({
+                title: 'Registration Required',
+                text: 'You need to register to access this feature.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            event.preventDefault(); // Prevent form submission if not registered
+        } else {
+            // Proceed with posting the comment
+            // Implement your comment posting logic here
+            const comment = document.getElementById('commentInput').value;
+            console.log('Comment posted:', comment); // Replace with your comment posting logic
+            // Clear the input field after posting
+            document.getElementById('commentInput').value = '';
+        }
+    }
+}
+
+</script>                                
+                              </form>
+                            </div>
+                            <!-- /.card-footer -->
+                          </div>
+
+
+
+
+
+
                     </div>
                     <!-- /.row -->
                 </div>
