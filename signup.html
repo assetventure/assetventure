@@ -22,6 +22,23 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 	<link href="app.css" rel="stylesheet">
 	<link href="icons.css" rel="stylesheet">
+	<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <!-- <script>
+      const firebaseConfig = {
+  apiKey: "AIzaSyAaEPOis0pFqeAzO1zj_pvVuTMEFBVtlic",
+  authDomain: "assetventure-b4991.firebaseapp.com",
+  projectId: "assetventure-b4991",
+  storageBucket: "assetventure-b4991.appspot.com",
+  messagingSenderId: "698474732851",
+  appId: "1:698474732851:web:e92bf44981fc8d0aa63246",
+  measurementId: "G-W9LMYQ3M1P"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = firebase.firestore();
+    </script> -->
 	<title>Asset Venture</title>
 </head>
 
@@ -133,38 +150,37 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<!-- signup.html -->
 	 
-	<script>
+	<script type="module">
+		// Import Firebase libraries
+		import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+		import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+	
+		// Your Firebase configuration
+		const firebaseConfig = {
+			apiKey: "AIzaSyAaEPOis0pFqeAzO1zj_pvVuTMEFBVtlic",
+			authDomain: "assetventure-b4991.firebaseapp.com",
+			projectId: "assetventure-b4991",
+			storageBucket: "assetventure-b4991.appspot.com",
+			messagingSenderId: "698474732851",
+			appId: "1:698474732851:web:e92bf44981fc8d0aa63246",
+			measurementId: "G-W9LMYQ3M1P"
+		};
+	
+		// Initialize Firebase
+		const app = initializeApp(firebaseConfig);
+		const db = getFirestore(app); // Get Firestore instance
+	
+		// Your existing signup code
 		document.addEventListener('DOMContentLoaded', () => {
-			let db;
-			const request = indexedDB.open('UserDatabase', 1);
-		
-			request.onupgradeneeded = function(event) {
-				db = event.target.result;
-				let objectStore = db.createObjectStore('users', { keyPath: 'email' });
-				objectStore.createIndex('inviteCode', 'inviteCode', { unique: true });
-				objectStore.createIndex('inviteCount', 'inviteCount', { unique: false });
-			};
-		
-			request.onsuccess = function(event) {
-				db = event.target.result;
-		
-				// Check for invite code in the URL and store it
-				const urlParams = new URLSearchParams(window.location.search);
-				const referrerInviteCode = urlParams.get('invite');
-				if (referrerInviteCode) {
-					localStorage.setItem('referrerInviteCode', referrerInviteCode);
-				}
-			};
-		
-			document.querySelector('form').addEventListener('submit', function(e) {
+			document.querySelector('form').addEventListener('submit', async function(e) {
 				e.preventDefault();
-		
+	
 				// Get form data
 				let username = document.getElementById('inputUsername').value;
 				let email = document.getElementById('inputEmailAddress').value;
 				let password = document.getElementById('inputChoosePassword').value;
 				let termsChecked = document.getElementById('flexSwitchCheckChecked').checked;
-		
+	
 				if (!termsChecked) {
 					Swal.fire({
 						icon: 'warning',
@@ -173,83 +189,52 @@
 					});
 					return;
 				}
-		
+	
 				// Generate a unique invite code
 				let inviteCode = 'INV-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-				console.log("Generated Invite Code:", inviteCode);
-		
-				const referrerCode = localStorage.getItem('referrerInviteCode') || null;
-		
-				// Check if email exists before adding
-				const transaction = db.transaction(['users'], 'readwrite');
-				const objectStore = transaction.objectStore('users');
-				const checkUserRequest = objectStore.get(email);
-		
-				checkUserRequest.onsuccess = function(event) {
-					if (event.target.result) {
-						Swal.fire({
-							icon: 'error',
-							title: 'Oops...',
-							text: 'Error: User with this email already exists.',
-						});
-					} else {
-						const request = objectStore.add({ username, email, password, balance: 200000, inviteCode, inviteCount: 0, referrerCode });
-		
-						request.onsuccess = function() {
-							// Increment invite count for referrer
-							if (referrerCode) {
-								incrementInviteCount(referrerCode); // Call to increment the invite count for the referrer
-							}
-		
-							Swal.fire({
-								icon: 'success',
-								title: 'Success!',
-								text: `User registered successfully.`,
-								timer: 2000,
-								showConfirmButton: false
-							}).then(() => {
-								localStorage.setItem('loggedInUser', email);
-								localStorage.setItem('inviteCode', inviteCode); // Store the invite code separately
-								localStorage.removeItem('referrerInviteCode');
-								window.location.href = 'dashboard.html';
-							});
-						};
-		
-						request.onerror = function(event) {
-							Swal.fire({
-								icon: 'error',
-								title: 'Oops...',
-								text: 'An error occurred while registering.',
-							});
-						};
-					}
-				};
+				const referrerCode = null; // You can adjust this if you have a referrer
+	
+				try {
+					// Save user data in Firebase, including the new 'signupbonus' field
+					await setDoc(doc(db, 'users', email), {
+						username: username,
+						email: email,
+						password: password,  // Consider hashing the password for security
+						balance: 200000,
+						inviteCode: inviteCode,
+						inviteCount: 0,
+						referrerCode: referrerCode,
+						message: '', // Add the message field with an empty string by default
+						signupbonus: 30000 // Adding the signup bonus field
+					});
+	
+					Swal.fire({
+						icon: 'success',
+						title: 'Success!',
+						text: `User registered successfully. Your invite code is: ${inviteCode}`,
+						timer: 2000,
+						showConfirmButton: false
+					}).then(() => {
+						window.location.href = 'dashboard.html?email=' + encodeURIComponent(email); // Pass email to dashboard
+					});
+				} catch (error) {
+					console.error("Error saving user to Firebase:", error);
+					Swal.fire({
+						icon: 'error',
+						title: 'Oops...',
+						text: 'Error saving user data to Firebase.',
+					});
+				}
 			});
-		
-			// Increment invite count function
-			function incrementInviteCount(referrerCode) {
-				const transaction = db.transaction(['users'], 'readwrite');
-				const objectStore = transaction.objectStore('users');
-				const request = objectStore.get(referrerCode);
-		
-				request.onsuccess = function(event) {
-					const user = event.target.result;
-					if (user) {
-						user.inviteCount = (user.inviteCount || 0) + 1; // Increment the count
-						const updateRequest = objectStore.put(user);
-						
-						updateRequest.onsuccess = function() {
-							console.log('Invite count updated successfully for referrer:', referrerCode);
-						};
-		
-						updateRequest.onerror = function(event) {
-							console.error('Error updating invite count for referrer:', event.target.errorCode);
-						};
-					}
-				};
-			}
 		});
-		</script>
+	</script>
+	
+	
+
+	
+	  
+
+	
 		
 	
 	
