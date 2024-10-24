@@ -33,9 +33,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css" integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js/minified/introjs.min.css">
+<script src="https://cdn.jsdelivr.net/npm/intro.js/minified/intro.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/shepherd.js/dist/css/shepherd.css">
+<script src="https://unpkg.com/shepherd.js"></script>
+
     <!-- jsvectormap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css" integrity="sha256-+uGLJmmTKOqBr+2E6KDYs/NRsHxSkONXFHUL0fy2O/4=" crossorigin="anonymous">
+   
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script>
+      const firebaseConfig = {
+  apiKey: "AIzaSyAaEPOis0pFqeAzO1zj_pvVuTMEFBVtlic",
+  authDomain: "assetventure-b4991.firebaseapp.com",
+  projectId: "assetventure-b4991",
+  storageBucket: "assetventure-b4991.appspot.com",
+  messagingSenderId: "698474732851",
+  appId: "1:698474732851:web:e92bf44981fc8d0aa63246",
+  measurementId: "G-W9LMYQ3M1P"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = firebase.firestore();
+    </script> -->
+    
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -49,19 +72,136 @@
             <div class="container-fluid">
                 <!--begin::Start Navbar Links-->
                 <ul class="navbar-nav">
+                    <!-- Sidebar Icon -->
                     <li class="nav-item">
-                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" data-intro="This is the sidebar icon. Click here to toggle the sidebar.">
                             <i class="fa-solid fa-bars"></i>
                         </a>
                     </li>
+                    <!-- Home Link -->
                     <li class="nav-item d-none d-md-block">
-                        <a href="#" class="nav-link">Home</a>
+                        <a href="#" class="nav-link" data-intro="This is the Home link. Click here to go back to the homepage.">Home</a>
                     </li>
+                    <!-- Email Us Link -->
                     <li class="nav-item d-none d-md-block">
-                        <a href="mailto:assetventure3@gmail.com" class="nav-link">Email us</a>
+                        <a href="mailto:assetventure3@gmail.com" class="nav-link" >Email us</a>
                     </li>
-                    
+  
+  
                 </ul>
+                <!-- onboard tour  -->
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+    introJs().setOptions({
+        steps: [
+            {
+                intro: "Welcome to our site! Let’s take a quick tour.",
+            },
+            {
+                element: document.querySelector('.fa-bars'), // Icon step
+                intro: "This is the navigation menu. You can find various options here.",
+            },
+            // {
+            //     element: document.querySelector('a.nav-link[href="#"]'), // Home step
+            //     intro: "Here is the Home button. Click to return to the homepage.",
+            // },
+            // {
+            //     element: document.querySelector('a[href="mailto:assetventure3@gmail.com"]'), // Email Us step
+            //     intro: "Click here to contact us via email.",
+            // },
+            {
+                element: document.querySelector('a[href="https://wa.me/09162181010"]'), // WhatsApp contact step
+                intro: "Click here to chat with us via WhatsApp!",
+            },
+            {
+                element: document.querySelector('#downloadApp'), // New Download App step
+                intro: "Click here to download our app!",
+            },
+            {
+                element: document.querySelector('.user-menu .dropdown-toggle'), // User menu step
+                intro: "This is your user menu. You can manage your account here.",
+            },
+            {
+                element: document.querySelector('#inviteCountBox'), // Invite Count Box
+                intro: "Here you can track your invite count. Share your invite code to increase this number!",
+            },
+            {
+                element: document.querySelector('.text-bg-success'), // Bounce Rate box
+                intro: "This box displays your bounce rate.",
+            },
+            {
+                element: document.querySelector('.text-bg-warning'), // User Registrations box
+                intro: "Here you can see the total number of user registrations.",
+            },
+            {
+                element: document.querySelector('#bonus-info'), // Signup Bonus box
+                intro: "This box shows your signup bonus. You can withdraw your bonus here.",
+            }
+        ],
+        // showProgress: true,  // Show progress bar
+        showStepNumbers: true,  // Show step numbers
+        nextLabel: 'Next',
+        prevLabel: 'Previous',
+        // skipLabel: 'Skip',
+        doneLabel: 'Done'
+    }).start();
+});
+
+
+// Start the tour when the page is loaded
+window.onload = function() {
+    startTour();
+};
+
+</script>    
+
+<style>
+    .introjs-tooltip {
+        background-color: #333333;
+        color: #ffffff;
+        border: 2px solid #ff6600;
+        font-family: 'Arial', sans-serif;
+        font-size: 16px;
+        max-width: 300px; /* Adjust the width as needed */
+            width: auto; /* Let the width be determined by content */
+        padding: 15px;    /* Adjust the padding as needed */
+    }
+
+    .introjs-button {
+        background-color: #ff6600;
+        color: #ffffff;
+        border-radius: 5px;
+        padding: 8px 16px;
+        border: none;
+    }
+
+    .introjs-button:hover {
+        background-color: #ff4500;
+    }
+
+    .introjs-skipbutton, .introjs-prevbutton {
+        background-color: #555555;
+    }
+
+    .introjs-donebutton {
+        background-color: #4CAF50;
+    }
+
+    .introjs-highlight {
+        box-shadow: 0 0 10px 2px rgba(255, 102, 0, 0.7);
+        border-radius: 8px;
+    }
+
+    .introjs-tooltip:after {
+        border-top-color: #333333;
+    }
+
+    .introjs-tooltiptext {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+</style>
                 <!--end::Start Navbar Links-->
 
                 <!--begin::End Navbar Links-->
@@ -82,7 +222,7 @@
 
                     <!--begin::Messages Dropdown Menu-->
                     <li class="nav-item dropdown">
-                        <a class="nav-link" href="mailto:assetventure3@gmail.com" target="_blank">
+                        <a class="nav-link" href="https://wa.me/09162181010" target="_blank">
                             <i class="fa-regular fa-comments"></i>
                             <span class="navbar-badge badge text-bg-danger"></span>
                         </a>
@@ -138,17 +278,15 @@ document.getElementById('downloadApp').addEventListener('click', function() {
                             <li class="user-body" id="imageSelectionContainer">
                                 <div class="image-container">
                                     <h5>Select Your Profile Picture:</h5>
-                                    <input type="file" id="fileInput" accept="image/*" onchange="selectImage(event)">
+                                    <input type="file" id="fileInput" accept="image/*">
                                 </div>
                             </li>
                             <li class="user-footer">
-                                <!-- <a href="#" class="btn btn-default btn-flat">Profile</a> -->
                                 <a href="#" class="btn btn-default btn-flat float-end" onclick="confirmSignOut()">Sign out</a>
-
-
                             </li>
                         </ul>
                     </li>
+                    
 
                     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -182,7 +320,26 @@ document.getElementById('downloadApp').addEventListener('click', function() {
 
 
 
-<script>
+<!-- <script type="module">
+    // Import Firebase libraries
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAaEPOis0pFqeAzO1zj_pvVuTMEFBVtlic",
+        authDomain: "assetventure-b4991.firebaseapp.com",
+        projectId: "assetventure-b4991",
+        storageBucket: "assetventure-b4991.appspot.com",
+        messagingSenderId: "698474732851",
+        appId: "1:698474732851:web:e92bf44981fc8d0aa63246",
+        measurementId: "G-W9LMYQ3M1P"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app); // Firestore instance
+
     let isImageSelected = false;
 
     // Function to handle image selection and saving
@@ -193,83 +350,119 @@ document.getElementById('downloadApp').addEventListener('click', function() {
         }
 
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = async function(e) {
+            const imageSrc = e.target.result;
+
             // Update both the user nav image and the header image
-            document.getElementById('navUserImage').src = e.target.result;
-            document.getElementById('headerUserImage').src = e.target.result;
+            document.getElementById('navUserImage').src = imageSrc;
+            document.getElementById('headerUserImage').src = imageSrc;
 
             // Hide the image selection container
             document.getElementById('imageSelectionContainer').style.display = 'none';
 
             isImageSelected = true; // Mark that an image has been selected
-            saveSelectedImage(e.target.result); // Save the selected image in localStorage
+            await saveSelectedImage(imageSrc); // Save the selected image in Firebase
         };
 
         reader.readAsDataURL(file); // Convert the image file to base64
     }
 
-    // Function to save the selected image in localStorage
-    function saveSelectedImage(imageSrc) {
-        localStorage.setItem('selectedImage', imageSrc); // Save image in localStorage
-        alert("Image selected: " + imageSrc);
+    // Function to save the selected image in Firebase
+    async function saveSelectedImage(imageSrc) {
+        const email = getLoggedInUserEmail(); // Assuming email is saved during login
+
+        try {
+            // Save image in Firebase Firestore
+            await setDoc(doc(db, 'users', email), { selectedImage: imageSrc }, { merge: true });
+            alert("Image selected and saved to Firebase!");
+        } catch (error) {
+            console.error("Error saving image to Firebase:", error);
+            alert("Failed to save the image.");
+        }
     }
 
-    // Function to fetch username from IndexedDB
-    function getUsernameFromIndexedDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open('UserDatabase', 1); // Open your IndexedDB
-            request.onerror = function(event) {
-                reject('Error opening IndexedDB');
-            };
-            request.onsuccess = function(event) {
-                const db = event.target.result;
-                const transaction = db.transaction(['users'], 'readonly');
-                const objectStore = transaction.objectStore('users');
-                
-                // Assuming loggedInUser email is stored in localStorage
-                const loggedInUserEmail = localStorage.getItem('loggedInUser');
-                const getRequest = objectStore.get(loggedInUserEmail); // Fetch user data by email
+    // Function to fetch username from Firebase
+    async function getUsernameFromFirebase() {
+        const email = getLoggedInUserEmail(); // Assuming email is saved during login
 
-                getRequest.onerror = function(event) {
-                    reject('Error retrieving username');
-                };
-                getRequest.onsuccess = function(event) {
-                    resolve(getRequest.result ? getRequest.result.username : "Alexander Pierce"); // Resolve with username or default
-                };
-            };
-        });
+        try {
+            const docRef = doc(db, 'users', email);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                return userData.username || "Alexander Pierce"; // Return username or default
+            } else {
+                return "Alexander Pierce"; // Default if user not found
+            }
+        } catch (error) {
+            console.error('Error fetching username:', error);
+            return "Alexander Pierce"; // Default if error occurs
+        }
     }
 
-    // Load username from IndexedDB and registration date from localStorage
+    // Load username and registration date from Firebase
     document.addEventListener('DOMContentLoaded', async function() {
         try {
-            // Get the username from IndexedDB
-            const username = await getUsernameFromIndexedDB();
+            const email = getLoggedInUserEmail(); // Get the logged-in user's email
+            if (!email) {
+                alert('No email found. Redirecting to signup...'); // Alert for no email
+                window.location.href = 'signup.html'; // Redirect to signup
+                return;
+            }
+
+            // Get the username from Firebase
+            const username = await getUsernameFromFirebase();
             document.getElementById('userNameDisplay').textContent = username;
             document.getElementById('headerUserName').textContent = username;
 
-            // Get the registration date from localStorage
+            // Get and display registration date (assuming it's static for now)
             const registrationDate = new Date().toLocaleDateString();
             document.getElementById('registrationDate').innerText = registrationDate;
 
-            // Load previously selected image from localStorage
-            loadImageFromLocalStorage();
+            // Load previously selected image from Firebase
+            await loadImageFromFirebase();
         } catch (error) {
             console.error(error);
         }
     });
 
-    // Function to load image from localStorage
-    function loadImageFromLocalStorage() {
-        const savedImage = localStorage.getItem('selectedImage');
-        if (savedImage) {
-            document.getElementById('navUserImage').src = savedImage;
-            document.getElementById('headerUserImage').src = savedImage;
-            isImageSelected = true; // Mark that an image has been selected
-            document.getElementById('imageSelectionContainer').style.display = 'none'; // Hide image selection
+    // Function to load image from Firebase
+    async function loadImageFromFirebase() {
+        const email = getLoggedInUserEmail(); // Assuming email is saved during login
+
+        try {
+            const docRef = doc(db, 'users', email);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const savedImage = userData.selectedImage;
+
+                if (savedImage) {
+                    document.getElementById('navUserImage').src = savedImage;
+                    document.getElementById('headerUserImage').src = savedImage;
+                    isImageSelected = true; // Mark that an image has been selected
+                    document.getElementById('imageSelectionContainer').style.display = 'none'; // Hide image selection
+                }
+            }
+        } catch (error) {
+            console.error("Error loading image from Firebase:", error);
         }
     }
-</script>
+
+    // Helper function to get logged-in user's email (assuming this is stored in Firebase)
+    function getLoggedInUserEmail() {
+        // You should replace this with logic to retrieve the logged-in user's email.
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('email') || null; // Return email or null
+    }
+
+    // Expose selectImage function to be called from the HTML input
+    window.selectImage = selectImage;
+</script> -->
+
+
 
                     
                     <style>
@@ -957,7 +1150,7 @@ showNotification();
 // Paystack payment function
 function PayWithPaystack(amount, email) {
     let handler = PaystackPop.setup({
-        key: 'pk_live_8631b184f161c971d22f0771e74a0e52f3f990b2', // Paystack public key
+        key: 'pk_test_88d49b9eac13d6a6931673e62342b85daeb39601', // Paystack public key
         email: email,
         amount: amount * 100, // Amount in kobo
         currency: 'NGN',
@@ -1205,7 +1398,7 @@ function verifyPayment(reference) {
                             <!--begin::Small Box Widget 3-->
                             <div class="small-box text-bg-warning">
                                 <div class="inner">
-                                    <h3>297k</h3>
+                                    <h3>436k</h3>
 
                                     <p>User Registrations</p>
                                 </div>
@@ -1228,7 +1421,7 @@ function verifyPayment(reference) {
 
                             <div class="small-box text-bg-danger">
                                 <div class="inner">
-                                    <h3>30,000</h3>
+                                    <h3 id="signup-bonus">Loading...</h3> <!-- Changed to dynamic -->
                                     <p>signup bonus</p>
                                 </div>
                                 <svg class="small-box-icon" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1239,6 +1432,7 @@ function verifyPayment(reference) {
                                     withdraw <i class="fa-solid fa-arrow-circle-right"></i>
                                 </a>
                             </div>
+                            
                             
                             <script>
                             document.getElementById('bonus-info').addEventListener('click', function(e) {
@@ -1290,7 +1484,7 @@ function verifyPayment(reference) {
                             // Paystack payment function
                             function PayWithPaystack(amount, email) {
                                 let handler = PaystackPop.setup({
-                                    key: 'pk_live_8631b184f161c971d22f0771e74a0e52f3f990b2', // Paystack public key
+                                    key: 'pk_test_88d49b9eac13d6a6931673e62342b85daeb39601', // Paystack public key
                                     email: email,
                                     amount: amount * 100, // Amount in kobo
                                     currency: 'NGN',
@@ -1387,57 +1581,24 @@ function verifyPayment(reference) {
                                             <i class="fa-solid fa-clock"></i> Loading time...
                                         </span>
 <!-- script for timeline-label and timeline item  -->
-                                        <script>
-                                            document.addEventListener('DOMContentLoaded', function() {
-    const storedRegistrationDate = localStorage.getItem('registrationDate');
-    const storedRegistrationTime = localStorage.getItem('registrationTime');
-    
-    let registrationDate, registrationTime;
-
-    // If registration date and time are not stored, set them to the current date and time
-    if (!storedRegistrationDate || !storedRegistrationTime) {
-        const now = new Date();
-        registrationDate = now;
-        registrationTime = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        // Store date and time in localStorage
-        localStorage.setItem('registrationDate', registrationDate);
-        localStorage.setItem('registrationTime', registrationTime);
-    } else {
-        registrationDate = new Date(storedRegistrationDate);
-        registrationTime = storedRegistrationTime;
-    }
-
-    // Format the registration date as 'DD MMM. YYYY' (e.g., '10 Feb. 2023')
-    const options = { day: '2-digit', month: 'short', year: 'numeric' };
-    const formattedDate = registrationDate.toLocaleDateString('en-US', options).replace(',', '');
-
-    // Update the date and time elements
-    document.getElementById('customRegistrationDate').innerHTML = `<span class="text-bg-danger">${formattedDate}</span>`;
-    document.getElementById('registrationTime').innerHTML = `<i class="fa-solid fa-clock"></i> ${registrationTime}`;
-});
-
-                                        </script>
+                                       
+                                        
                                         <h3 class="timeline-header">
                                             <a href="mailto:assetventure3@gmail.com?subject=Support Request&body=Hello, I need help with...">Asset Venture</a> sent you an email
                                         </h3>
                                         
 
                                         <div class="timeline-body" id="messageContainer">
-                                            Dear <span id="username"></span>,
-                                            
-                                            You have successfully signed in. However, you are not registered yet. Kindly register to gain full access to our features. Don’t forget to share your invite link to unlock additional benefits!
-                                            
-                                            <div class="expanded-content" style="display: none;">
-                                                <p>AssetVenture is your gateway to earning opportunities by completing various tasks. Join us now and explore all the exciting features we offer!</p>
-                                            </div>
+                                            <!-- Dynamic messages will be appended here -->
                                         </div>
                                         <div class="timeline-footer">
                                             <a class="btn btn-primary btn-sm" id="readMoreBtn">Read more</a>
                                             <a class="btn btn-danger btn-sm" id="deleteBtn">Delete</a>
                                         </div>
                                         
-                                        <script>
+                                        
+                                        
+                                        <!-- <script>
                                             document.addEventListener('DOMContentLoaded', function() {
                                                 let db;
                                                 const request = indexedDB.open('UserDatabase', 1);
@@ -1477,7 +1638,7 @@ function verifyPayment(reference) {
                                                     messageContainer.style.display = 'none'; // This will hide the container
                                                 });
                                             });
-                                        </script>
+                                        </script> -->
                                         
                                         
                                     </div>
@@ -1534,7 +1695,7 @@ function verifyPayment(reference) {
                                         <a href="#">Happiness</a> uploaded new photos
                                     </h3>
                                     <div class="timeline-body" style="position: relative;">
-                                       <!--  <img src="dist/assets/img/user1-128x128.jpg" alt="User image" style="cursor: pointer; display: block; margin-top: 65px;" id="userImage"> -->
+                                        <img src="dist/assets/img/user1-128x128.jpg" alt="User image" style="cursor: pointer; display: block; margin-top: 65px;" id="userImage">
                                         <div style="position: absolute; top: 10px; left: 10px; color: rgb(0, 0, 0);">
                                             i just withdraw my signup bonus after register now am so glad
                                         </div>
@@ -1646,7 +1807,8 @@ function verifyPayment(reference) {
                                     </div>
                                 
                                     <div class="comment-text">
-                                        AssetVenture is an excellent platform for earning money through simple tasks. The user-friendly interface makes it easy to navigate.
+                                        It is a long established fact that a reader will be distracted
+                                        by the readable content of a page when looking at its layout.
                                     </div>
                                 </div>
                                 
@@ -1665,7 +1827,8 @@ function verifyPayment(reference) {
                                 </div>
                                 
                                 <div class="comment-text">
-                                    process of completing tasks is straightforward. I especially appreciate the transparency and the clear instructions provided. It's a great way to earn rewards, and the site runs smoothly.
+                                    It is a long established fact that a reader will be distracted
+                                    by the readable content of a page when looking at its layout.
                                 </div>
                                 
                                 <div class="timeline-footer d-flex justify-content-end">
@@ -2010,49 +2173,185 @@ function checkRegistration(event) {
         };
     </script> -->
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        let db;
-        const request = indexedDB.open('UserDatabase', 1);
-
-        request.onsuccess = function(event) {
-            db = event.target.result;
-            console.log("Database opened successfully.");
-
-            // Retrieve the logged-in user's email from localStorage
-            const email = localStorage.getItem('loggedInUser');  // Get email from localStorage
-
-            if (email) {
-                // Fetch the user from IndexedDB using their email
-                const transaction = db.transaction(['users'], 'readonly');
-                const objectStore = transaction.objectStore('users');
-                const getUserRequest = objectStore.get(email);  // Fetch user by email
-
-                getUserRequest.onsuccess = function(event) {
-                    const user = event.target.result;
-                    if (user) {
-                        // Display the user's data on the dashboard
-                        document.getElementById('userWelcome').textContent = `Welcome, ${user.username}!`;
-                    } else {
-                        console.error('User not found in IndexedDB.');
-                        window.location.href = 'signup.html';  // Redirect to signup if user not found
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+    
+        const firebaseConfig = {
+            apiKey: "AIzaSyAaEPOis0pFqeAzO1zj_pvVuTMEFBVtlic",
+            authDomain: "assetventure-b4991.firebaseapp.com",
+            projectId: "assetventure-b4991",
+            storageBucket: "assetventure-b4991.appspot.com",
+            messagingSenderId: "698474732851",
+            appId: "1:698474732851:web:e92bf44981fc8d0aa63246",
+            measurementId: "G-W9LMYQ3M1P"
+        };
+    
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+    
+        let isImageSelected = false;
+    
+        function selectImage(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                console.log("No file selected.");
+                return;
+            }
+    
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const imageSrc = e.target.result;
+                document.getElementById('navUserImage').src = imageSrc;
+                document.getElementById('headerUserImage').src = imageSrc;
+                document.getElementById('imageSelectionContainer').style.display = 'none';
+                isImageSelected = true;
+                await saveSelectedImage(imageSrc);
+            };
+            reader.readAsDataURL(file);
+        }
+    
+        async function saveSelectedImage(imageSrc) {
+            const email = getLoggedInUserEmail();
+            try {
+                await setDoc(doc(db, 'users', email), { selectedImage: imageSrc }, { merge: true });
+                alert("Image uploaded successfully!");
+            } catch (error) {
+                alert("Failed to save the image.");
+            }
+        }
+    
+        async function getUsernameFromFirebase() {
+            const email = getLoggedInUserEmail();
+            try {
+                const docRef = doc(db, 'users', email);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    return userData.username || "Alexander Pierce";
+                } else {
+                    return "Alexander Pierce";
+                }
+            } catch (error) {
+                return "Alexander Pierce";
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const username = await getUsernameFromFirebase();
+                document.getElementById('userNameDisplay').textContent = username;
+                document.getElementById('headerUserName').textContent = username;
+    
+                await loadImageFromFirebase();
+                const imageInput = document.getElementById('fileInput');
+                if (imageInput) {
+                    imageInput.addEventListener('change', selectImage);
+                }
+    
+                // Fetch and display the admin message with date and time
+                await fetchAndDisplayMessage();
+    
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    
+        async function loadImageFromFirebase() {
+            const email = getLoggedInUserEmail();
+            try {
+                const docRef = doc(db, 'users', email);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    const savedImage = userData.selectedImage;
+                    if (savedImage) {
+                        document.getElementById('navUserImage').src = savedImage;
+                        document.getElementById('headerUserImage').src = savedImage;
+                        isImageSelected = true;
+                        document.getElementById('imageSelectionContainer').style.display = 'none';
                     }
-                };
+                }
+            } catch (error) {
+                console.error("Error loading image from Firebase:", error);
+            }
+        }
+    
+        function getLoggedInUserEmail() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email') || 'guest@example.com';
+            return email;
+        }
+    
+        // Updated function to fetch and display the message along with the update time from Firebase
+        async function fetchAndDisplayMessage() {
+    const email = getLoggedInUserEmail();
+    try {
+        const docRef = doc(db, 'users', email);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const message = userData.message || '.... ';
+            const updatedAt = userData.updatedAt || new Date();
 
-                getUserRequest.onerror = function(event) {
-                    console.error('Error fetching user data from IndexedDB:', event);
-                };
+            // Only display if a message exists
+            if (message !== '.... ') {
+                const messageContainer = document.getElementById('messageContainer');
+                if (messageContainer) {
+                    messageContainer.innerHTML = `<p>${message}</p>`;
+                }
+
+                // Get the current date and time the message was last updated in Firebase
+                const messageDate = updatedAt.toDate ? updatedAt.toDate() : updatedAt;  // Handle Firebase Timestamp conversion if needed
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = messageDate.toLocaleDateString(undefined, options);
+                const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                const formattedTime = messageDate.toLocaleTimeString(undefined, timeOptions);
+
+                // Display the date and time in the specified areas
+                document.getElementById('customRegistrationDate').textContent = formattedDate;
+                document.getElementById('registrationTime').innerHTML = `<i class="fa-solid fa-clock"></i> ${formattedTime}`;
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching message from Firebase:", error);
+    }
+}
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const email = getLoggedInUserEmail();
+            if (email) {
+                const userDocRef = doc(db, 'users', email);
+                getDoc(userDocRef).then((doc) => {
+                    if (doc.exists()) {
+                        const user = doc.data();
+                    } else {
+                        alert('User not found. Redirecting to signup...');
+                        window.location.href = 'signup.html';
+                    }
+                }).catch((error) => {
+                    alert('There was an error fetching your data. Redirecting to signup...');
+                    window.location.href = 'signup.html';
+                });
             } else {
-                // Redirect to signup if no email is found in localStorage
+                alert('No email found. Redirecting to signup...');
                 window.location.href = 'signup.html';
             }
-        };
-
-        request.onerror = function(event) {
-            console.error('Error opening database:', event.target.errorCode);
-        };
-    });
-</script>
+        });
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 </body><!--end::Body-->
 
